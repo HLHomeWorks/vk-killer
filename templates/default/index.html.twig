@@ -1,0 +1,22 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}VK-KILLER{% endblock %}
+
+{% block body %}
+    {{ include('menu.html.twig') }}
+
+    <img width="300px" src="{{ dictionary.avatars[app.user.sex]}}">
+
+    <div><label>Имя: {{ app.user.firstName }}</label></div>
+
+    <div><label>Фамилия: {{ app.user.secondName }}</label></div>
+
+    <div><label>Дата рождения: {{ app.user.birthdate.format('Y-m-d') }}</label></div>
+
+    <div><label>Пол: {{ dictionary.sex[app.user.sex]}}</label></div>
+
+    <div><label>Город: {{ dictionary.city[app.user.city]}}</label></div>
+
+    <div><label>О себе: {{ app.user.about}}</label></div>
+
+{% endblock %}

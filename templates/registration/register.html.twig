@@ -1,0 +1,38 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Регистрация{% endblock %}
+
+{% block body %}
+    <h2 class="h3 mb-3 font-weight-normal">Регистрация</h2>
+
+    {{ form_start(registrationForm) }}
+        {{ form_row(registrationForm.firstName, {
+            label: 'Введите ваше имя: '
+        }) }}
+        {{ form_row(registrationForm.secondName, {
+            label: 'Введите вашу фамилию: '
+        }) }}
+        {{ form_row(registrationForm.birthdate, {
+            label: 'Введите дату рождения: '
+        }) }}
+        {{ form_row(registrationForm.sex, {
+            label: 'Ввыберете пол: '
+        }) }}
+        {{ form_row(registrationForm.city, {
+            label: 'Выберите ваш город: '
+        }) }}
+        {{ form_row(registrationForm.about, {
+            label: 'Расскажите о себе: '
+        }) }}
+        {{ form_row(registrationForm.email, {
+            label: 'Введите email: '
+        }) }}
+        {{ form_row(registrationForm.plainPassword, {
+            label: 'Введите пароль: '
+        }) }}
+
+        <button type="submit" class="btn btn-lg btn-primary">Зарегистрироваться</button>
+
+        <a class="btn btn-lg btn-primary" href="{{ path('app_login') }}">Войти</a>
+    {{ form_end(registrationForm) }}
+{% endblock %}

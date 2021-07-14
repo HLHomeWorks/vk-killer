@@ -1,0 +1,73 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Поиск людей{% endblock %}
+
+{% block body %}
+    {{ include('menu.html.twig') }}
+
+    <div class="count">
+        Всего найдено: {{ pagination is null ? 0 : pagination.getTotalItemCount }}
+    </div>
+
+    <div class="list-group d-inline-flex">
+        {% for user in pagination %}
+            <a href="/profiles/{{ user.getId() }}" class="list-group-item list-group-item-action flex-column align-items-start">
+                <div>
+                    <h5 class="mb-1">{{ user.getFirstName() }} {{ user.getSecondName() }}</h5>
+                </div>
+                <img width="100px" src="{{ dictionary.avatars[user.sex]}}">
+                <p class="mb-1">Город: {{ dictionary.city[user.city]}}</p>
+            </a>
+                <button id="{{user.getId()}}_accept" type="submit" class="btn btn-secondary accept_friend">
+                    Принять заявку
+                </button>
+                <button id="{{user.getId()}}_reject" type="submit" class="btn btn-secondary reject_friend">
+                    Отклонить заявку
+                </button>
+        {% endfor %}
+
+        {{ pagination is not null ? knp_pagination_render(pagination) }}
+    </div>
+
+    <script>
+        $(function() {
+            $('.accept_friend').click(function() {
+                let id = parseInt(this.id, 10);
+                $.ajax({
+                    type: 'PATCH',
+                    data: '',
+                    success: function() {
+                        $('#' + id + '_accept').addClass('disabled')
+                        $('#' + id + '_reject').addClass('disabled')
+                        $('#' + id + '_accept').html('Заявка принята')
+                    },
+                    error: function() {
+                        alert('Произошла ошибка. Попробуйте позже')
+                    },
+                    url: '/api/v1/friends/' + id + '/accept',
+                    cache:false
+                });
+            });
+
+            $('.reject_friend').click(function() {
+                let id = parseInt(this.id, 10)
+                $.ajax({
+                    type: 'PATCH',
+                    data: '',
+                    success: function() {
+                        $('#' + id + '_accept').addClass('disabled')
+                        $('#' + id + '_reject').addClass('disabled')
+                        $('#' + id + '_reject').html('Заявка отклонена')
+                    },
+                    error: function() {
+                        alert('Произошла ошибка. Попробуйте позже')
+                    },
+                    url: '/api/v1/friends/' + id + '/reject',
+                    cache:false
+                });
+            });
+        });
+
+    </script>
+
+{% endblock %}

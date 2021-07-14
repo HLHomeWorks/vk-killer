@@ -1,0 +1,79 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Поиск людей{% endblock %}
+
+{% block body %}
+    {{ include('menu.html.twig') }}
+
+    <div class="count">
+        Всего найдено: {{ pagination is null ? 0 : pagination.getTotalItemCount }}
+    </div>
+
+    <div class="list-group d-inline-flex">
+        {% for user in pagination %}
+            <a href="/profiles/{{ user.getId() }}" class="list-group-item list-group-item-action flex-column align-items-start">
+                <div>
+                    <h5 class="mb-1">{{ user.getFirstName() }} {{ user.getSecondName() }}</h5>
+                </div>
+                <img width="100px" src="{{ dictionary.avatars[user.sex]}}">
+                <p class="mb-1">Город: {{ dictionary.city[user.city]}}</p>
+            </a>
+            {% if user.getId() in sentOffersIds %}
+                <button id="{{user.getId()}}" type="submit" class="btn btn-secondary add_as_friend disabled">
+                    Заявка отправлена
+                </button>
+            {% elseif user.getId() in acceptedOffersIds %}
+                <button id="{{user.getId()}}" type="submit" class="btn btn-secondary delete_friend">
+                    Удалить из друзей
+                </button>
+            {% else %}
+                <button id="{{user.getId()}}" type="submit" class="btn btn-secondary add_as_friend">
+                    Добавить в друзья
+                </button>
+            {% endif %}
+        {% endfor %}
+
+        {{ pagination is not null ? knp_pagination_render(pagination) }}
+    </div>
+
+    <script>
+        $(function() {
+            $('.add_as_friend').click(function() {
+                let id = this.id;
+                $.ajax({
+                    type: 'POST',
+                    data: '',
+                    success: function() {
+                        $('#' + id).addClass('disabled')
+                        $('#' + id).html('Заявка отправлена')
+                    },
+                    error: function() {
+                        alert('Произошла ошибка. Попробуйте позже')
+                    },
+                    url: '/api/v1/friends/' + id,
+                    cache:false
+                });
+            });
+
+            $('.delete_friend').click(function() {
+                console.log(this)
+                let id = this.id;
+                $.ajax({
+                    type: 'DELETE',
+                    data: '',
+                    success: function() {
+                        $('#' + id).addClass('disabled')
+                        $('#' + id).html('Пользователь удален')
+                    },
+                    error: function() {
+                        alert('Произошла ошибка. Попробуйте позже')
+                    },
+                    url: '/api/v1/friends/' + id,
+                    cache:false
+                });
+            });
+        });
+
+    </script>
+
+{% endblock %}
